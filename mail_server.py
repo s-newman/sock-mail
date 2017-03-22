@@ -27,7 +27,7 @@ while True:
         data = conn.recv(1024).strip().split()
         
         if data[0] == 'HELO':
-            conn.sendall('250 Hello ', data[1], ', I am glad to meet you')
+            conn.sendall('250 Hello ' + data[1] + ', I am glad to meet you')
 
         elif data[0] == 'MAIL':
             addr_start = data[1].find('<')

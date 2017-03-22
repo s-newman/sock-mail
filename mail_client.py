@@ -17,7 +17,7 @@ print data
 
 # get the sender
 sender = raw_input('Sending email address: ')
-sock.sendall('MAIL FROM:<', sender, '>')
+sock.sendall('MAIL FROM:<' + str(sender) + '>')
 data = sock.recv(1024)
 print data
 
@@ -28,7 +28,7 @@ while getting:
     new_rcpt = raw_input('Would you like to add another recipient? (Y/N): ')
     if new_rcpt == 'Y':
         recipient = raw_input('Recipient email address: ')
-        sock.sendall('RCPT TO:<', recipient, '>')
+        sock.sendall('RCPT TO:<' + str(recipient) + '>')
         data = sock.recv(1024)
         print data
         rcpts.append(recipient)
@@ -40,12 +40,12 @@ sock.sendall('DATA')
 sock.recv(1024)
 print data
 
-sock.sendall('From: "', raw_input('Full name of ', sender), '" <', sender, '>')
+sock.sendall('From: "' + str(raw_input('Full name of ' + sender)) + '" <' + str(sender) + '>')
 
 for rcpt in rcpts:
-    sock.sendall('To: "', raw_input('Full name of', rcpt), '" <', rcpt, '>')
+    sock.sendall('To: "' + str(raw_input('Full name of ' + rcpt)) + '" <' + str(rcpt) + '>')
 
-sock.sendall('Date: ', datetime.now().strftime('%a, %d %b %Y %H:%M:%S %z'))
+sock.sendall('Date: ' + datetime.now().strftime('%a, %d %b %Y %H:%M:%S %z'))
 
 making_email = True
 print 'Type "END" to end email.'
