@@ -49,7 +49,7 @@ while True:
                 if entry == '.':
                     record = False
                     QUEUE += 1
-                    conn.sendall('250 Ok: queued as ', QUEUE)
+                    conn.sendall('250 Ok: queued as ' + QUEUE)
                 else:
                     content += entry
             
