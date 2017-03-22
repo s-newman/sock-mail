@@ -33,7 +33,7 @@ while getting:
         print data
         rcpts.append(recipient)
     elif new_rcpt == 'N':
-        getting == False
+        break
 
 # make the email
 sock.sendall('DATA')
