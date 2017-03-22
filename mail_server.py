@@ -51,7 +51,7 @@ while True:
                     QUEUE += 1
                     conn.sendall('250 Ok: queued as ', QUEUE)
                 else:
-                    content.append(entry)
+                    content += entry
             
         elif data[0] == 'QUIT':
             conn.sendall('221 Bye')

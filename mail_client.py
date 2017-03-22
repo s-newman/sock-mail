@@ -56,8 +56,6 @@ while making_email:
         sock.sendall('.')
     else:
         sock.sendall(line)
-        data = sock.recv(1024)
-        print data
 
 sock.sendall(line)
 data = sock.recv(1024)
