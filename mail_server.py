@@ -1,6 +1,7 @@
 #!/usr/bin/env python2.7
 # Sean Newman
 import socket as sck
+from mail_comms import *
 
 HOST = ''
 PORT = 10101

@@ -2,6 +2,7 @@
 # Sean Newman
 import socket as sck
 from datetime import datetime
+from mail_comms import *
 
 HOST = '127.0.0.1'
 PORT = 10101

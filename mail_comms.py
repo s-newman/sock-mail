@@ -15,7 +15,7 @@ def recv_print(sock, server=False):
     else:
         print 'SERVER: ' + data
 
-dev send_recv(sock, data, server=False):
+def send_recv(sock, data, server=False):
     send_print(sock, data, server)
     recv_print(sock, server)
 
