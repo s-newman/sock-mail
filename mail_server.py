@@ -20,7 +20,6 @@ while True:
     conn, addr = sock.accept()
     print 'connected to ', addr
 
-    conn.sendall()
     send_print(server=True, conn, '200 mail.rit.edu ESMTP Postfix')
     connected = True
 
