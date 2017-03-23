@@ -14,8 +14,9 @@ def recv_print(sock, server=False):
         print 'CLIENT: ' + data
     else:
         print 'SERVER: ' + data
+    return data.strip().split()
 
 def send_recv(sock, data, server=False):
     send_print(sock, data, server)
-    recv_print(sock, server)
+    return recv_print(sock, server)
 
