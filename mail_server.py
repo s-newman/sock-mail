@@ -28,7 +28,6 @@ while True:
         data = recv_print(conn, server=True)
         
         if data[0] == 'HELO':
-            conn.sendall()
             send_print(conn, '250 Hello ' + data[1] +
                     ', I am glad to meet you', server=True)
 
