@@ -69,3 +69,7 @@ def main():
 
     send_recv(sock, 'QUIT')
     sock.close()
+
+if __name__ == '__main__':
+    main()
+
