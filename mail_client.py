@@ -63,7 +63,7 @@ def main():
         line = raw_input('>')
         if line == 'END':
             making_email = False
-            sock.sendall('.')
+            send_recv(sock, '.')
         else:
             sock.sendall(line)
 
