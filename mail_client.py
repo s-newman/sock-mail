@@ -6,59 +6,66 @@ from datetime import datetime
 HOST = '127.0.0.1'
 PORT = 10101
 
-# create socket
-sock = sck.socket(sck.AF_INET, sck.SOCK_STREAM)
-sock.connect((HOST, PORT))
-data = sock.recv(1024)
-print data
-sock.sendall('HELO relay.mydomain.cars')
-data = sock.recv(1024)
-print data
+def send_print(sock, data):
+    sock.sendall(data)
+    print 'CLIENT: ' + data
 
-# get the sender
-sender = raw_input('Sending email address: ')
-sock.sendall('MAIL FROM:<' + str(sender) + '>')
-data = sock.recv(1024)
-print data
+def recv_print(sock):
+    data = sock.recv(1024)
+    print 'SERVER: ' + data
 
-# get recipients
-rcpts = []
-getting = True
-while getting:
-    new_rcpt = raw_input('Would you like to add another recipient? (Y/N): ')
-    if new_rcpt == 'Y':
-        recipient = raw_input('Recipient email address: ')
-        sock.sendall('RCPT TO:<' + str(recipient) + '>')
-        data = sock.recv(1024)
-        print data
-        rcpts.append(recipient)
-    elif new_rcpt == 'N':
-        break
+def send_recv(sock, data):
+    send_print(sock, data)
+    recv_print(sock)
 
-# make the email
-sock.sendall('DATA')
-sock.recv(1024)
-print data
+def main():
+    # create socket
+    sock = sck.socket(sck.AF_INET, sck.SOCK_STREAM)
+    sock.connect((HOST, PORT))
+    recv_print(sock)
+    send_recv(sock, 'HELO relay.mydomain.cars')
 
-sock.sendall('From: "' + str(raw_input('Full name of ' + sender)) + '" <' + str(sender) + '>')
+    # get the sender
+    sender = raw_input('Sending email address: ')
+    send_recv(sock, 'MAIL FROM:<' + str(sender) + '>')
 
-for rcpt in rcpts:
-    sock.sendall('To: "' + str(raw_input('Full name of ' + rcpt)) + '" <' + str(rcpt) + '>')
+    # get recipients
+    rcpts = []
+    getting = True
+    while getting:
+        new_rcpt = raw_input('Would you like to add another recipient? (Y/N): ')
+        if new_rcpt == 'Y':
+            recipient = raw_input('Recipient email address: ')
+            send_recv(sock, 'RCPT TO:<' + str(recipient) + '>')
+            rcpts.append(recipient)
+        elif new_rcpt == 'N':
+            break
 
-sock.sendall('Date: ' + datetime.now().strftime('%a, %d %b %Y %H:%M:%S %z'))
+    # send the sender header
+    send_recv(sock, 'DATA')
 
-making_email = True
-print 'Type "END" to end email.'
-while making_email:
-    line = raw_input('>')
-    if line == 'END':
-        making_email = False
-        sock.sendall('.')
-    else:
-        sock.sendall(line)
+    send_print(sock,
+            'From: "' + str(raw_input('Full name of ' + sender)) +
+            '" <' + str(sender) + '>')
 
-sock.sendall(line)
-data = sock.recv(1024)
-print data
+    # send the recipients header(s)
+    for rcpt in rcpts:
+        send_print(sock,
+            'To: "' + str(raw_input('Full name of ' + rcpt)) +
+            '" <' + str(rcpt) + '>')
 
-sock.close()
+    # send the time header
+    send_print(sock, 'Date: ' + datetime.now().strftime('%a, %d %b %Y %H:%M:%S %z'))
+
+    making_email = True
+    print 'Type "END" to end email.'
+    while making_email:
+        line = raw_input('>')
+        if line == 'END':
+            making_email = False
+            sock.sendall('.')
+        else:
+            sock.sendall(line)
+
+    send_recv(sock, 'QUIT')
+    sock.close()
