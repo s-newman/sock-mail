@@ -19,6 +19,15 @@ def send_recv(sock, data):
     send_print(sock, data)
     recv_print(sock)
 
+def get_addr(recipient=True):
+    addr, name = '', ''
+    if recipient:
+        addr = raw_input('Recipient email address: ')
+    else:
+        addr = raw_input('Sending email address: ')
+    name = raw_input('Full name of ' + addr + ': ')
+    return addr, name
+
 def main():
     # create socket
     sock = sck.socket(sck.AF_INET, sck.SOCK_STREAM)
@@ -27,33 +36,31 @@ def main():
     send_recv(sock, 'HELO relay.mydomain.cars')
 
     # get the sender
-    sender = raw_input('Sending email address: ')
-    send_recv(sock, 'MAIL FROM:<' + str(sender) + '>')
+    sender, sender_name = get_addr(recipient=False)
+    send_recv(sock, 'MAIL FROM:<' + sender + '>')
 
     # get recipients
     rcpts = []
+    rcpt_names = []
     getting = True
     while getting:
         new_rcpt = raw_input('Would you like to add another recipient? (Y/N): ')
         if new_rcpt == 'Y':
-            recipient = raw_input('Recipient email address: ')
-            send_recv(sock, 'RCPT TO:<' + str(recipient) + '>')
+            recipient, recipient_name = get_addr()
+            send_recv(sock, 'RCPT TO:<' + recipient + '>')
             rcpts.append(recipient)
+            rcpt_names.append(recipient_name)
         elif new_rcpt == 'N':
             break
 
     # send the sender header
     send_recv(sock, 'DATA')
 
-    send_print(sock,
-            'From: "' + str(raw_input('Full name of ' + sender + ': ')) +
-            '" <' + str(sender) + '>')
+    send_print(sock, 'From: "' + sender_name + '" <' + sender + '>')
 
     # send the recipients header(s)
-    for rcpt in rcpts:
-        send_print(sock,
-            'To: "' + str(raw_input('Full name of ' + rcpt + ': ')) +
-            '" <' + str(rcpt) + '>')
+    for i in range(0, len(rcpts)):
+        send_print(sock, 'To: "' + rcpt_names[i] + '" <' + rcpts[i] + '>')
 
     # send the time header
     send_print(sock, 'Date: ' + datetime.now().strftime('%a, %d %b %Y %H:%M:%S %z'))
