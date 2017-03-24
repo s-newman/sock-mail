@@ -46,13 +46,13 @@ def main():
     send_recv(sock, 'DATA')
 
     send_print(sock,
-            'From: "' + str(raw_input('Full name of ' + sender)) +
+            'From: "' + str(raw_input('Full name of ' + sender + ': ')) +
             '" <' + str(sender) + '>')
 
     # send the recipients header(s)
     for rcpt in rcpts:
         send_print(sock,
-            'To: "' + str(raw_input('Full name of ' + rcpt)) +
+            'To: "' + str(raw_input('Full name of ' + rcpt + ': ')) +
             '" <' + str(rcpt) + '>')
 
     # send the time header
